@@ -1,0 +1,56 @@
+# baseURI: http://linked.data.gov.au/def/fsdf-powerline
+# imports: http://linked.data.gov.au/def/fsdf-core
+# imports: http://linked.data.gov.au/def/fsdf-network
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pline: <http://linked.data.gov.au/def/fsdf-powerline/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://linked.data.gov.au/def/fsdf-powerline>
+  a owl:Ontology ;
+  dcterms:created "2021-01-13"^^xsd:date ;
+  dcterms:creator <https://orcid.org/0000-0002-3884-3420> ;
+  dcterms:description "schema for Powerlines"@en ;
+  dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
+  dcterms:source "<https://github.com/GeoscienceAustralia/FSDF-Powerlines/blob/master/Powerlines.xlsx>" ;
+  dcterms:title "FSDF Powerline ontology" ;
+  owl:imports <http://linked.data.gov.au/def/fsdf-core> ;
+  owl:imports <http://linked.data.gov.au/def/fsdf-network> ;
+.
+pline:Powerline
+  a owl:Class ;
+  rdfs:comment "Provisionally a sub-class of LinkSequence" ;
+  rdfs:label "FSDF Powerline (line)" ;
+  rdfs:subClassOf <http://linked.data.gov.au/def/fsdf-core/Feature> ;
+  rdfs:subClassOf <http://linked.data.gov.au/def/fsdf-network/LinkSequence> ;
+.
+pline:capacity-kV
+  a owl:DatatypeProperty ;
+  rdfs:domain pline:Powerline ;
+  rdfs:label "Powerline capacity - kV" ;
+  rdfs:range xsd:decimal ;
+.
+pline:operator
+  a owl:ObjectProperty ;
+  dcterms:description "Manager of infrastructure" ;
+  rdfs:domain pline:Powerline ;
+  rdfs:label "Powerline operator" ;
+  rdfs:subPropertyOf dcterms:contributor ;
+.
+pline:owner
+  a owl:ObjectProperty ;
+  dcterms:description "The owner or operator of the feature (if known)" ;
+  rdfs:domain pline:Powerline ;
+  rdfs:label "Powerline owner" ;
+  rdfs:subPropertyOf dcterms:contributor ;
+.
+pline:relationshipToGround
+  a owl:ObjectProperty ;
+  dcterms:description "Where the feature is locate reletive to the ground surface" ;
+  rdfs:domain pline:Powerline ;
+  rdfs:label "Relationship to ground" ;
+  rdfs:range <http://www.w3.org/2004/02/skos/core#Concept> ;
+.

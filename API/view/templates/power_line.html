@@ -34,7 +34,7 @@
             <tr><td><strong>Description</strong></td><td>{{ description }}</td></tr>
             <tr><td><strong>Class</strong></td><td>{{ lineclass }}</td></tr>
             <tr><td><strong>Operational Status</strong></td><td>{{ operationalstatus }}</td></tr>
-            <tr><td><strong>Capacity KVA</strong></td><td>{{ capacitykv }}</td></tr>
+            <tr><td><strong>Capacity KV</strong></td><td>{{ capacitykv }}</td></tr>
             <tr><td><strong>Planimetric Accuracy</strong></td><td>{{ planimetricaccuracy }}</td></tr>
             <tr><td><strong>State</strong></td><td>{{ state }}</td></tr>
             <tr><td><strong>Attribute Source</strong></td><td>{{ attributesource }}</td></tr>
@@ -45,7 +45,8 @@
             <tr><td><strong>AusPIX DGGS location</strong></td>
                 <td> <ul>
                     {%- for item in ausPIX_DGGS -%}
-                    <dd><a href="{{ item['uri'] }}">{{ item['label'] }}</a></dd>
+                    <!--<dd><a href="{{ item['uri'] }}">{{ item['label'] }}</a></dd>-->
+                    <a href="{{ item['uri'] }}">{{ item['label'] }}  </a>
                      {%- endfor -%}
                     </ul>
                 </td>

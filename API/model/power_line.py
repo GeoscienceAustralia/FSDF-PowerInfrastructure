@@ -5,7 +5,7 @@ from flask import render_template, Response
 import conf
 from pyldapi import Renderer, Profile
 from rdflib import Graph, URIRef, RDF, Namespace, Literal, BNode
-from rdflib.namespace import XSD   #imported for 'export_rdf' function
+from rdflib.namespace import XSD, SKOS   #imported for 'export_rdf' function
 
 from .gazetteer import GAZETTEERS, NAME_AUTHORITIES
 from .dggs_in_line import get_cells_in_json_and_return_in_json
@@ -112,7 +112,7 @@ class Power_line(Renderer):
         for power_line in conf.db_select(q):
             self.hasName['value'] = str(power_line[0])
             # self.uri = power_line[1]
-            self.featuretype = power_line[1]
+            self.featuretype = '_'.join(str(power_line[1]).split())
             self.descripton = power_line[2]
             self.lineclass = power_line[3]
 
@@ -128,11 +128,11 @@ class Power_line(Renderer):
             self.featuredate = power_line[11]
             self.spatialconfidence = power_line[12]
 
-
             # get geometry from database
             self.geom = ast.literal_eval(power_line[-1])
             self.lineCords = self.geom['coordinates']
             self.wkt = power_line[-2]
+            self.geometry_type = self.geom['type']
 
             # using the web API to find the DGGS cells for the geojson
             dggs_api_param = {
@@ -234,13 +234,16 @@ class Power_line(Renderer):
     #         return ''
 
     def _generate_dggs(self):
-        if self.id is not None and self.thisCell is not None:
-            return '{}'.format(self.thisCell)
+        if self.id is not None and self.thisLine is not None:
+            dggs_uri = []
+            for item in self.thisLine:
+                dggs_uri.append(item['uri'])
+            return '{}'.format(dggs_uri)
         else:
             return ''
 
 
-    def export_rdf(self, model_view='NCGA'):
+    def export_rdf(self, model_view='Power line'):
         g = Graph()  # make instance of a RDF graph
 
         # namespace declarations
@@ -252,58 +255,73 @@ class Power_line(Renderer):
         g.bind('owl', owl)
         rdfs = Namespace('http://www.w3.org/2000/01/rdf-schema#')
         g.bind('rdfs', rdfs)
-
-        # specific to placename datasdet
-        place = Namespace('http://linked.data.gov.au/dataset/placenames/place/')
-        g.bind('place', place)
-        pname = URIRef('http://linked.data.gov.au/dataset/placenames/placenames/')
-        g.bind('pname', pname)
-        # made the cell ID the subject of the triples
-        auspix = URIRef('http://ec2-52-63-73-113.ap-southeast-2.compute.amazonaws.com/AusPIX-DGGS-dataset/')
-        g.bind('auspix', auspix)
-        pn = Namespace('http://linked.data.gov.au/def/placenames/')
-        g.bind('pno', pn)
+        sf = Namespace('http://www.opengis.net/ont/sf#')
+        g.bind('sf', sf)
+        skos = Namespace('https://www.w3.org/2009/08/skos-reference/skos.html')
 
         geox = Namespace('http://linked.data.gov.au/def/geox#')
         g.bind('geox', geox)
         g.bind('xsd', XSD)
-        sf = Namespace('http://www.opengis.net/ont/sf#')
-        g.bind('sf', sf)
+
+        core = Namespace('http://linked.data.gov.au/def/core#')
+        g.bind('core', core)
+        net = Namespace('http://linked.data.gov.au/def/net#')
+        g.bind('net', net)
+
+        auspix = URIRef('http://ec2-52-63-73-113.ap-southeast-2.compute.amazonaws.com/AusPIX-DGGS-dataset/')
+        g.bind('auspix', auspix)
+
         ptype = Namespace('http://pid.geoscience.gov.au/def/voc/ga/PlaceType/')
         g.bind('ptype', ptype)
 
+        # specific to powerline datasdet
+        pline_ds = Namespace('http://linked.data.gov.au/dataset/powerlines/')
+        g.bind('pline_ds', pline_ds)
+
+        # made the cell ID the subject of the triples
+        pline = Namespace('http://linked.data.gov.au/def/powerlines/')
+        g.bind('pline', pline)
+
         # build the graphs
-        official_placename = URIRef('{}{}'.format(pname, self.id))
-        this_place = URIRef('{}{}'.format(place, self.id))
-        g.add((official_placename, RDF.type, URIRef(pn + 'OfficialPlaceName')))
-        g.add((official_placename, dcterms.identifier, Literal(self.id, datatype=pn.ID_GAZ)))
-        g.add((official_placename, dcterms.identifier, Literal(self.auth_id, datatype=pn.ID_AUTH)))
-        g.add((official_placename, dcterms.issued, Literal(str(self.supplyDate), datatype=XSD.dateTime)))
-        g.add((official_placename, pn.name, Literal(self.hasName['value'], lang='en-AU')))
-        g.add((official_placename, pn.placeNameOf, this_place))
-        g.add((official_placename, pn.wasNamedBy, URIRef(self.authority['web'])))
-        g.add((official_placename, rdfs.label, Literal(self.hasName['value'])))
+        power_line = URIRef('{}{}'.format(pline_ds, self.id))
+        g.add((power_line, RDF.type, URIRef(pline + 'Powerline')))
+        g.add((power_line, dcterms.identifier, Literal(self.id, datatype=pline.ID)))
+        # g.add((power_line, pline.operator, Literal(str(self.operator), datatype=dcterms.Agent)))
+        # g.add((power_line, pline.owner, Literal(str(self.owner), datatype=dcterms.Agent)))
+        g.add((power_line, pline.description, Literal(str(self.descripton))))
+        g.add((power_line, pline.lineclass, Literal(str(self.lineclass))))
+        g.add((power_line, pline.capacityKV, Literal(str(self.capacitykv))))
+        g.add((power_line, pline.state, Literal(str(self.state))))
 
-        # if NCGA view, add the place info as well
-        if model_view == 'NCGA':
-            g.add((this_place, RDF.type, URIRef(pn + 'Place')))
-            g.add((this_place, dcterms.identifier, Literal(self.id, datatype=pn.ID_GAZ)))
-            g.add((this_place, dcterms.identifier, Literal(self.auth_id, datatype=pn.ID_AUTH)))
 
-            place_point = BNode()
-            g.add((place_point, RDF.type, URIRef(sf + 'Point')))
-            g.add((place_point, geo.asWKT, Literal(self._generate_wkt(), datatype=geo.wktLiteral)))
-            g.add((this_place, geo.hasGeometry, place_point))
+        g.add((power_line, core.name, Literal(self.hasName['value'], lang='en-AU')))
+        g.add((power_line, core.attriuteSource, Literal(str(self.attributesource))))
+        # g.add((power_line, core.custodianAgency, Literal(str(self.custodianagency), datatype=SKOS.Concept)))
+        # g.add((power_line, core.custodianLicensing, Literal(str(self.custodianlicensing), datatype=dcterms.LicenseDocument)))
+        g.add((power_line, core.featureSource, Literal(str(self.featuresource))))
+        g.add((power_line, core.featureType, URIRef(ptype + self.featuretype)))
+        g.add((power_line, core.operationalStatus, Literal(str(self.operationalstatus), datatype=SKOS.Concept)))
+        # g.add((power_line, core.sourceJurisdiction, Literal(str(self.sourcejurisdication), datatype=SKOS.Concept)))
+        g.add((power_line, core.attriuteDate, Literal(str(self.attributedate), datatype=XSD.dateTime)))
+        g.add((power_line, core.featureDate, Literal(str(self.featuredate), datatype=XSD.dateTime)))
+        # g.add((power_line, core.loadingDate, Literal(str(self.loadingdate), datatype=XSD.dateTime)))
+        g.add((power_line, core.planimetricAccuracy, Literal(str(self.planimetricaccuracy), datatype=core.Measure)))
+        # g.add((power_line, core.sourceUFI, Literal(str(self.sourceUFI))))
+        # g.add((power_line, core.verticalAccuracy, Literal(str(self.verticalaccuracy), datatype=core.Measure)))
+        g.add((power_line, core.spatialConfidence, Literal(str(self.spatialconfidence))))
 
-            place_dggs = BNode()
-            g.add((place_dggs, RDF.type, URIRef(geo + 'Geometry')))
-            g.add((place_dggs, geox.asDGGS, Literal(self._generate_dggs(), datatype=geox.dggsLiteral)))
-            g.add((this_place, geo.hasGeometry, place_dggs))
 
-            g.add((this_place, pn.hasPlaceClassification, URIRef(ptype + self.featureType['label'])))
-            g.add((this_place, pn.hasPlaceClassification, URIRef(ptype + self.hasCategory['label'])))
-            g.add((this_place, pn.hasPlaceClassification, URIRef(ptype + self.hasGroup['label'])))
-            g.add((this_place, pn.hasPlaceName, official_placename))
+        pline_wkt = BNode()
+        g.add((pline_wkt, RDF.type, URIRef(sf + self.geometry_type)))
+        g.add((pline_wkt, geo.asWKT, Literal(self.wkt, datatype=geo.wktLiteral)))
+        g.add((power_line, geo.hasGeometry, pline_wkt))
+
+        pline_dggs = BNode()
+        g.add((pline_dggs, RDF.type, URIRef(geo + 'Geometry')))
+        g.add((pline_dggs, geox.asDGGS, Literal(self._generate_dggs(), datatype=geox.dggsLiteral)))
+        g.add((power_line, geo.hasGeometry, pline_dggs))
+
+
 
         if self.mediatype == 'text/turtle':
             return Response(

@@ -18,7 +18,7 @@ def home():
     return render_template('home.html', home_page_settings=conf.home_page_boxes_dict)
 
 
-@routes.route('/power_line/')
+@routes.route('/power_lines/')
 def power_lines():
     # Search specific items using keywords
     search_string = request.values.get('search')
@@ -74,13 +74,13 @@ def power_lines():
                             ).render()
 
 
-@routes.route('/power_line/<string:power_line_id>')
+@routes.route('/power_lines/<string:power_line_id>')
 def power_line(power_line_id):
     power_line = Power_line(request, request.base_url)
     return power_line.render()
 
 
-@routes.route('/power_station/')
+@routes.route('/power_stations/')
 def power_stations():
     # Search specific items using keywords
     search_string = request.values.get('search')
@@ -136,13 +136,13 @@ def power_stations():
                             ).render()
 
 
-@routes.route('/power_station/<string:power_station_id>')
+@routes.route('/power_stations/<string:power_station_id>')
 def power_station(power_station_id):
     power_station = Power_station(request, request.base_url)
     return power_station.render()
 
 
-@routes.route('/power_substation/')
+@routes.route('/power_substations/')
 def power_substations():
     # Search specific items using keywords
     search_string = request.values.get('search')
@@ -198,7 +198,7 @@ def power_substations():
                             ).render()
 
 
-@routes.route('/power_substation/<string:power_substation_id>')
+@routes.route('/power_substations/<string:power_substation_id>')
 def power_substation(power_substation_id):
     power_substation = Power_substation(request, request.base_url)
     return power_substation.render()

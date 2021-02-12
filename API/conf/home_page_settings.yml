@@ -1,8 +1,8 @@
 home_page_boxes:
   REGISTER_OF_LD_APIs:
-  - {Power lines: "/power_line/"}
-  - {Power stations: "/power_station/"}
-  - {Power substations: "/power_substation/"}
+  - {Power lines: "/power_lines/"}
+  - {Power stations: "/power_stations/"}
+  - {Power substations: "/power_substations/"}
   DEFINITIONAL:
   - {Vocabularies: "http://ldweb.ga.gov.au/def/voc/ga/"}
   - {Ontologies: "http://pid.geoscience.gov.au/def/ont/ga/"}

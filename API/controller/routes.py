@@ -7,8 +7,6 @@ import conf
 import ast
 import folium
 import os, yaml
-import webbrowser
-import requests
 
 print(__name__)
 routes = Blueprint('controller', __name__)
@@ -17,9 +15,6 @@ DEFAULT_ITEMS_PER_PAGE=50
 
 @routes.route('/fsdf_home', strict_slashes=True)
 def fsdf_home():
-    # webbrowser.open('https://geoscienceaustralia.github.io/FSDF/')
-    # requests.get('https://geoscienceaustralia.github.io/FSDF/')
-    # return render_template('home.html', home_page_settings=conf.home_page_boxes_dict)
     return render_template('fsdf_home.html')
 
 

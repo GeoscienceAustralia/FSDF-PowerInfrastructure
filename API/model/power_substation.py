@@ -21,7 +21,7 @@ from rhealpixdggs import dggs
 rdggs = dggs.RHEALPixDGGS()
 
 
-class Power_station(Renderer):
+class Power_substation(Renderer):
     """
     This class represents a placename and methods in this class allow a placename to be loaded from the GA placenames
     database and to be exported in a number of formats including RDF, according to the 'PlaceNames Ontology'
@@ -32,23 +32,23 @@ class Power_station(Renderer):
     def __init__(self, request, uri):
         format_list = ['text/html', 'text/turtle', 'application/ld+json', 'application/rdf+xml']
         views = {
-            'Power station': Profile(
+            'Power substation': Profile(
                 'http://linked.data.gov.au/def/power/',
                 'Power Station View',
-                'This view is for power station delivered by the power station dataset'
+                'This view is for power station delivered by the power sub station dataset'
                 ' in accordance with the Power Station Profile',
                 format_list,
                 'text/html'
             )
         }
 
-        super(Power_station, self).__init__(request, uri, views, 'Power station')
+        super(Power_substation, self).__init__(request, uri, views, 'Power substation')
 
         self.id = uri.split('/')[-1]
 
         self.hasName = {
             'uri': 'http://linked.data.gov.au/def/power/',
-            'label': 'Power station:',
+            'label': 'Power substation:',
             'comment': 'The Entity has a name (label) which is a text string.',
             'value': None
         }
@@ -58,27 +58,18 @@ class Power_station(Renderer):
             'uri': None
         }
 
-        # self.uri = None
-        # self.feature_type = None
-        # self.operational_status = None
-        # self.custodian_agency = None
-        # self.physical_condition = None
-        # self.power_source = None
-        # self.station_class = None
-        # self.structuretype = None
-        # self.operator = None
-        # self.owner = None
-        # self.primaryfueltype = None
-        # self.primarysubfueltype = None
-        # self.generationmw = None
-        # self.generatornumber = None
-        # self.embeddednetworkoperator = None
-        # self.coolingtowernumber = None
-        # self.emissiontowernumber = None
-        # self.operationalunits = None
-        # self.address = None
-        # self.textnote = None
-        # self.wkt = None
+        self.uri = None
+        self.feature_type = None
+        self.operational_status = None
+        self.custodian_agency = None
+        self.physical_condition = None
+        self.power_source = None
+        self.substation_class = None
+        self.structuretype = None
+        self.voltage = None
+        self.address = None
+        self.textnote = None
+        self.wkt = None
 
 
         q = '''
@@ -92,16 +83,7 @@ class Power_station(Renderer):
                 "power_source",
                 "class",
                 "structuretype",
-                "operator",
-                "owner",
-                "primaryfueltype",
-                "primarysubfueltype",
-                "generationmw",
-                "generatornumber",
-                "embeddednetworkoperator",
-                "coolingtowernumber",
-                "emissiontowernumber",
-                "operationalunits",
+                "voltage",
                 "address",
                 "textnote",
                 "feature_date",
@@ -116,7 +98,7 @@ class Power_station(Renderer):
                 "loading_date",
                 ST_AsEWKT(geom) As geom_wkt,                
                 ST_AsGeoJSON(geom) As geom
-            FROM "powerStationPointsSource84"
+            FROM "power_substation_points84"
             WHERE "id" = '{}'
         '''.format(self.id)
 
@@ -128,20 +110,11 @@ class Power_station(Renderer):
             self.custodian_agency = row[4]
             self.physical_condition = row[5]
             self.power_source = row[6]
-            self.station_class = row[7]
+            self.substation_class = row[7]
             self.structuretype = row[8]
-            self.operator = row[9]
-            self.owner = row[10]
-            self.primaryfueltype = row[11]
-            self.primarysubfueltype = row[12]
-            self.generationmw = row[13]
-            self.generatornumber = row[14]
-            self.embeddednetworkoperator = row[15]
-            self.coolingtowernumber = row[16]
-            self.emissiontowernumber = row[17]
-            self.operationalunits = row[18]
-            self.address = row[19]
-            self.textnote = row[20]
+            self.voltage = row[9]
+            self.address = row[10]
+            self.textnote = row[11]
 
             # get geometry from database
             self.geom = ast.literal_eval(row[-1])
@@ -167,8 +140,8 @@ class Power_station(Renderer):
             return self.export_html(self.profile)
 
 
-    def export_html(self, model_view='Power_station'):
-        html_page = 'power_station.html'
+    def export_html(self, model_view='Power_substation'):
+        html_page = 'power_substation.html'
         return Response(        # Response is a Flask class imported at the top of this script
             render_template(     # render_template is also a Flask module
                 html_page,   # uses the html template to send all this data to it.
@@ -179,27 +152,48 @@ class Power_station(Renderer):
                 custodian_agency=self.custodian_agency,
                 physical_condition=self.physical_condition,
                 power_source=self.power_source,
-                station_class=self.station_class,
+                substation_class=self.substation_class,
                 structuretype=self.structuretype,
-                operator=self.operator,
-                owner=self.owner,
-                primaryfueltype=self.primaryfueltype,
-                primarysubfueltype=self.primarysubfueltype,
-                generationmw=self.generationmw,
-                generatornumber=self.generatornumber,
-                embeddednetworkoperator=self.embeddednetworkoperator,
-                coolingtowernumber=self.coolingtowernumber,
-                emissiontowernumber=self.emissiontowernumber,
-                operationalunits=self.operationalunits,
+                voltage=self.voltage,
                 address=self.address,
                 textnote=self.textnote,
                 coordinate_list = self.coords,
                 ausPIX_DGGS = self.thisCell,
-                wkt=self.wkt
+                wkt = self.wkt
             ),
             status=200,
             mimetype='text/html'
         )
+
+
+    # def _generate_wkt(self):
+    #     """
+    #     Polygon: 8
+    #     Point: 6889
+    #     :return:
+    #     :rtype:
+    #     """
+    #     if self.geometry_type == 'Point':
+    #         coordinates = {
+    #             'srid': self.srid,
+    #             'x': self.coords[0],
+    #             'y': self.coords[1]
+    #         }
+    #         wkt = 'SRID={srid};POINT({x} {y})'.format(**coordinates)
+    #     elif self.geometry_type == 'Polygon':
+    #         start = 'SRID={srid};POLYGON(('.format(srid='WGS84')
+    #         coordinates = ''
+    #         for coord in zip(self.lons, self.lats):
+    #             coordinates += '{} {},'.format(coord[0], coord[1])
+    #
+    #         coordinates = coordinates[:-1]  # drop the final ','
+    #         end = '))'
+    #         wkt = '{start}{coordinates}{end}'.format(start=start, coordinates=coordinates, end=end)
+    #     else:
+    #         wkt = ''
+    #
+    #     return wkt
+
 
     def _generate_wkt(self):
         if self.id is not None and self.x is not None and self.y is not None:

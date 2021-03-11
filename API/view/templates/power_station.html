@@ -1,0 +1,67 @@
+
+{% extends "layout.html" %}
+
+
+
+{% block content %}
+    <style>
+        dt {font-weight: bold;}
+    </style>
+
+
+
+    <dl>
+        <dt><i><a title="{{ hasName['comment'] }}" href="{{ hasName['uri'] }}">{{ hasName['label'] }}</a></i></dt>
+        <dd><h2>{{ hasName['value'] }}</h2></dd>
+
+        <h4>Power station {{ id }}</h4>
+        <p><code>{{ uri }}</code></p>
+
+
+        <iframe id="inlineFrameMap"
+            title="Map for {{ hasName['value'] }}"
+            width="1150"
+            height="250"
+            src="{{ url_for('controller.show_map') }}?name={{ hasName['value']|urlencode }}&coords={{ coordinate_list }}">
+
+        </iframe>
+
+
+         <table class="pretty">
+            <tr><th>Property</th><th>Value</th></tr>
+            <tr><td><strong>Feature Type</strong></td><td>{{ feature_type }}</td></tr>
+            <tr><td><strong>Operational Status</strong></td><td>{{ operational_status }}</td></tr>
+            <tr><td><strong>Custodian Agency</strong></td><td>{{ custodian_agency }}</td></tr>
+            <tr><td><strong>Physical Condition</strong></td><td>{{ physical_condition }}</td></tr>
+            <tr><td><strong>Power source</strong></td><td>{{ power_source }}</td></tr>
+            <tr><td><strong>Class</strong></td><td>{{ station_class }}</td></tr>
+            <tr><td><strong>Structure Type</strong></td><td>{{ structuretype }}</td></tr>
+            <tr><td><strong>Operator</strong></td><td>{{ operator }}</td></tr>
+            <tr><td><strong>Owner</strong></td><td>{{ owner }}</td></tr>
+            <tr><td><strong>Primary Fuel Type</strong></td><td>{{ primaryfueltype }}</td></tr>
+            <tr><td><strong>Primary SubFuel Type</strong></td><td>{{ primarysubfueltype }}</td></tr>
+            <tr><td><strong>Generaton MW</strong></td><td>{{ generationmw }}</td></tr>
+            <tr><td><strong>Generator Number</strong></td><td>{{ generatornumber }}</td></tr>
+            <tr><td><strong>Embedded Network Operator</strong></td><td>{{ embeddednetworkoperator }}</td></tr>
+            <tr><td><strong>Cooling Tower Number</strong></td><td>{{ coolingtowernumber }}</td></tr>
+            <tr><td><strong>Emission Tower Number</strong></td><td>{{ emissiontowernumber }}</td></tr>
+            <tr><td><strong>Operational Units</strong></td><td>{{ operationalunits }}</td></tr>
+            <tr><td><strong>Address</strong></td><td>{{ address }}</td></tr>
+            <tr><td><strong>Text Note</strong></td><td>{{ textnote }}</td></tr>
+            <tr><td><strong>AusPIX DGGS location</strong></td><td><a href="{{ ausPIX_DGGS['uri'] }}">{{ ausPIX_DGGS['label'] }}</a></td></tr>
+            <tr><td><strong>Geometry(WKT)</strong></td><td>{{ wkt }}</td></tr>
+         </table>
+
+
+    </dl>
+    <br>
+    <p>
+        <dt>Alternative views and formats for this resource:</dt>
+    </p>
+    <ul>
+        <li><a href="?_profile=alt">Alternate profiles</a></li>
+    </ul>
+{% endblock %}
+
+
+

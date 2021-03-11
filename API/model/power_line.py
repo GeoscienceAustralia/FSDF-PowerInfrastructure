@@ -66,19 +66,19 @@ class Power_line(Renderer):
         #     'uri': None
         # }
 
-        self.featuretype = None
-        self.descripton = None
-        self.lineclass = None
-        self.operationalstatus = None,
-        self.capacitykv = None
-        self.planimetricaccuracy = None
-        self.state = None
-        self.attributesource = None
-        self.attributedate = None
-        self.featuresource = None
-        self.featuredate = None
-        self.spatialconfidence = None
-        self.wkt = None
+        # self.featuretype = None
+        # self.descripton = None
+        # self.lineclass = None
+        # self.operationalstatus = None,
+        # self.capacitykv = None
+        # self.planimetricaccuracy = None
+        # self.state = None
+        # self.attributesource = None
+        # self.attributedate = None
+        # self.featuresource = None
+        # self.featuredate = None
+        # self.spatialconfidence = None
+        # self.wkt = None
 
         self.thisLine = []
         self.lineCords = []

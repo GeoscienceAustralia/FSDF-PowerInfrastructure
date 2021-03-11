@@ -30,18 +30,9 @@
 
          <table class="pretty">
             <tr><th>Property</th><th>Value</th></tr>
-            <tr><td><strong>Feature Type</strong></td><td>{{ featuretype }}</td></tr>
-            <tr><td><strong>Description</strong></td><td>{{ description }}</td></tr>
-            <tr><td><strong>Class</strong></td><td>{{ lineclass }}</td></tr>
-            <tr><td><strong>Operational Status</strong></td><td>{{ operationalstatus }}</td></tr>
-            <tr><td><strong>Capacity KV</strong></td><td>{{ capacitykv }}</td></tr>
-            <tr><td><strong>Planimetric Accuracy</strong></td><td>{{ planimetricaccuracy }}</td></tr>
-            <tr><td><strong>State</strong></td><td>{{ state }}</td></tr>
-            <tr><td><strong>Attribute Source</strong></td><td>{{ attributesource }}</td></tr>
-            <tr><td><strong>Attribute Date</strong></td><td>{{ attributedate }}</td></tr>
-            <tr><td><strong>Feature Source</strong></td><td>{{ featuresource }}</td></tr>
-            <tr><td><strong>Feature Date</strong></td><td>{{ featuredate }}</td></tr>
-            <tr><td><strong>Spatial Confidence</strong></td><td>{{ spatialconfidence }}</td></tr>
+            <tr><td><strong>SA2 Name</strong></td><td>{{ SA2_name }}</td></tr>
+            <tr><td><strong>SA3 Name</strong></td><td>{{ SA3_name }}</td></tr>
+            <tr><td><strong>AEIP Building No</strong></td><td>{{ aeip_buildingNo }}</td></tr>
             <tr><td><strong>AusPIX DGGS location</strong></td>
                 <td> <ul>
                     {%- for item in ausPIX_DGGS -%}
@@ -57,7 +48,7 @@
     </dl>
     <br>
     <p>
-        <dt>Alternative views and formats for this resource:</dt>
+        <dt>Alternative profiles and formats for this resource:</dt>
     </p>
     <ul>
         <li><a href="?_profile=alt">Alternate profiles</a></li>

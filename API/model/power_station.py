@@ -58,29 +58,7 @@ class Power_station(Renderer):
             'uri': None
         }
 
-<<<<<<< HEAD
-        # self.uri = None
-        # self.feature_type = None
-        # self.operational_status = None
-        # self.custodian_agency = None
-        # self.physical_condition = None
-        # self.power_source = None
-        # self.station_class = None
-        # self.structuretype = None
-        # self.operator = None
-        # self.owner = None
-        # self.primaryfueltype = None
-        # self.primarysubfueltype = None
-        # self.generationmw = None
-        # self.generatornumber = None
-        # self.embeddednetworkoperator = None
-        # self.coolingtowernumber = None
-        # self.emissiontowernumber = None
-        # self.operationalunits = None
-        # self.address = None
-        # self.textnote = None
-        # self.wkt = None
-=======
+
         self.uri = None
         self.feature_type = None
         self.operational_status = None
@@ -102,7 +80,7 @@ class Power_station(Renderer):
         self.address = None
         self.textnote = None
         self.wkt = None
->>>>>>> parent of 83a465e... delete unnecessary md
+
 
 
         q = '''

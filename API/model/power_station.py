@@ -142,6 +142,16 @@ class Power_station(Renderer):
             self.operationalunits = row[18]
             self.address = row[19]
             self.textnote = row[20]
+            self.feature_date = row[21]
+            self.feature_source = row[22]
+            self.attribute_date = row[23]
+            self.attribute_source = row[24]
+            self.vertical_accuracy = row[25]
+            self.planimetric_accuracy = row[26]
+            self.source_ufi = row[27]
+            self.source_jurisdiction = row[28]
+            self.custodian_licensing = row[29]
+            self.loading_date = row[30]
 
             # get geometry from database
             self.geom = ast.literal_eval(row[-1])
@@ -193,6 +203,16 @@ class Power_station(Renderer):
                 operationalunits=self.operationalunits,
                 address=self.address,
                 textnote=self.textnote,
+                feature_date=self.feature_date,
+                feature_source=self.feature_source,
+                attribute_date=self.attribute_date,
+                attribute_source=self.attribute_source,
+                vertical_accuracy=self.vertical_accuracy,
+                planimetric_accuracy=self.planimetric_accuracy,
+                source_ufi=self.source_ufi,
+                source_jurisdiction=self.source_jurisdiction,
+                custodian_licensing=self.custodian_licensing,
+                loading_date=self.loading_date,
                 coordinate_list = self.coords,
                 ausPIX_DGGS = self.thisCell,
                 wkt=self.wkt

@@ -58,18 +58,18 @@ class Power_substation(Renderer):
             'uri': None
         }
 
-        self.uri = None
-        self.feature_type = None
-        self.operational_status = None
-        self.custodian_agency = None
-        self.physical_condition = None
-        self.power_source = None
-        self.substation_class = None
-        self.structuretype = None
-        self.voltage = None
-        self.address = None
-        self.textnote = None
-        self.wkt = None
+        # self.uri = None
+        # self.feature_type = None
+        # self.operational_status = None
+        # self.custodian_agency = None
+        # self.physical_condition = None
+        # self.power_source = None
+        # self.substation_class = None
+        # self.structuretype = None
+        # self.voltage = None
+        # self.address = None
+        # self.textnote = None
+        # self.wkt = None
 
 
         q = '''
@@ -115,6 +115,16 @@ class Power_substation(Renderer):
             self.voltage = row[9]
             self.address = row[10]
             self.textnote = row[11]
+            self.feature_date = row[12]
+            self.feature_source = row[13]
+            self.attribute_date = row[14]
+            self.attribute_source = row[15]
+            self.vertical_accuracy = row[16]
+            self.planimetric_accuracy = row[17]
+            self.source_ufi = row[18]
+            self.source_jurisdiction = row[19]
+            self.custodian_licensing = row[20]
+            self.loading_date = row[21]
 
             # get geometry from database
             self.geom = ast.literal_eval(row[-1])
@@ -157,6 +167,16 @@ class Power_substation(Renderer):
                 voltage=self.voltage,
                 address=self.address,
                 textnote=self.textnote,
+                feature_date=self.feature_date,
+                feature_source=self.feature_source,
+                attribute_date=self.attribute_date,
+                attribute_source=self.attribute_source,
+                vertical_accuracy=self.vertical_accuracy,
+                planimetric_accuracy=self.planimetric_accuracy,
+                source_ufi=self.source_ufi,
+                source_jurisdiction=self.source_jurisdiction,
+                custodian_licensing=self.custodian_licensing,
+                loading_date=self.loading_date,
                 coordinate_list = self.coords,
                 ausPIX_DGGS = self.thisCell,
                 wkt = self.wkt
